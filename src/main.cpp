@@ -3,39 +3,60 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <boost/program_options.hpp>
 
+namespace opt = boost::program_options;
 
-int main() {
-    auto path = std::string("/home/valery/Projects/opensource/github/hype/tests/RR_CPU.pb.gz");
-    std::ifstream myfile;
+int main(int argc, char *argv[]) {
+    opt::options_description description("All options");
+
+    description.add_options()(
+            "path", opt::value<std::string>(), "path to the pprof file"
+            );
+
+    opt::variables_map vm;
+
+    opt::store(opt::parse_command_line(argc, argv, description), vm);
+
+    try {
+        opt::notify(vm);
+    } catch (const opt::required_option &err) {
+        std::cout << "Error: " << err.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    auto path = vm["path"].as<std::string>();
+    std::ifstream file;
 
 
     std::vector<char> buffer;
     try {
-        myfile.open(path, std::ios_base::binary);
-        if (myfile.is_open()) {
-            myfile.seekg(0, std::ios_base::end);
-            size_t length = myfile.tellg();
-            myfile.seekg(0, std::ios_base::beg);
+
+        file.open(path, std::ios::binary);
+        if (file.is_open()) {
+            file.seekg(0, std::ios::end);
+            size_t length = file.tellg();
+            file.seekg(0, std::ios::beg);
 
             if (length > 0) {
                 buffer.resize(length);
-                myfile.read(&buffer[0], length);
+                file.read(&buffer[0], length);
 
-                // check if file is gzipped
-                if ((buffer[0] == char (0x1f)) and (buffer[1] == char (0x8b))) {
+                // check is there data gzipped
+                // https://tools.ietf.org/html/rfc1952#page-5
+                if ((buffer[0] == char(0x1f)) and (buffer[1] == char(0x8b))) {
                     std::cout << "here" << std::endl;
                 }
             }
         }
     } catch (const std::exception &e) {
         std::cout << e.what() << std::endl;
-        myfile.close();
+        file.close();
         return EXIT_FAILURE;
     }
 
 
-    myfile.
+    file.
 
             close();
 
