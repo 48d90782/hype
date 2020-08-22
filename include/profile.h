@@ -55,6 +55,28 @@ typedef struct Mapping_s {
     int64_t build_id_index;
 } Mapping_t;
 
+typedef struct Function_s {
+    // Unique nonzero id for the function.
+    uint64_t id;
+    // Name of the function, in human-readable form if available.
+    std::string name;
+    // Name of the function, as identified by the system.
+    // For instance, it can be a C++ mangled name.
+    std::string system_name;
+    // Source file containing the function.
+    std::string filename;
+    // Line number in source file.
+    int64_t start_line;
+
+    // HELPERS
+    // Index into string table
+    int64_t name_index;
+    // Index into string table
+    int64_t system_name_index;
+    // Index into string table
+    int64_t filename_index;
+} Function_t;
+
 typedef struct Profile_s {
     boost::numeric::ublas::vector<int> sample_type;
 
