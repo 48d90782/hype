@@ -22,6 +22,10 @@ typedef struct Sample_s {
 } Sample_t;
 
 typedef struct Location_s {
+    uint64_t id;
+    uint64_t mapping_index;
+    uint64_t address;
+
 } Location_t;
 
 // mapping corresponds to Profile.Mapping
@@ -76,6 +80,16 @@ typedef struct Function_s {
     // Index into string table
     int64_t filename_index;
 } Function_t;
+
+typedef struct Line_s {
+    // Line number in source code.
+    int64_t line{};
+    // The id of the corresponding profile.Function for this line.
+    uint64_t function_index{};
+
+    // HELPERS
+    Function_t function;
+} Line_t;
 
 typedef struct Profile_s {
     boost::numeric::ublas::vector<int> sample_type;
