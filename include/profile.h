@@ -21,13 +21,6 @@ typedef struct ValueType_s {
 typedef struct Sample_s {
 } Sample_t;
 
-typedef struct Location_s {
-    uint64_t id;
-    uint64_t mapping_index;
-    uint64_t address;
-
-} Location_t;
-
 // mapping corresponds to Profile.Mapping
 typedef struct Mapping_s {
     // Unique nonzero id for the mapping.
@@ -90,6 +83,40 @@ typedef struct Line_s {
     // HELPERS
     Function_t function;
 } Line_t;
+
+// Describes function and line table debug information.
+typedef struct Location_s {
+    // Unique nonzero id for the location.  A profile could use
+    // instruction addresses or any integer sequence as ids.
+    uint64_t id;
+    // The id of the corresponding profile.Mapping for this location.
+    // It can be unset if the mapping is unknown or not applicable for
+    // this profile type.
+    uint64_t mapping_index;
+    // The instruction address for this location, if available.  It
+    // should be within [Mapping.memory_start...Mapping.memory_limit]
+    // for the corresponding mapping. A non-leaf address may be in the
+    // middle of a call instruction. It is up to display tools to find
+    // the beginning of the instruction if necessary.
+    uint64_t address;
+    // Multiple line indicates this location has inlined functions,
+    // where the last entry represents the caller into which the
+    // preceding entries were inlined.
+    //
+    // E.g., if memcpy() is inlined into printf:
+    //    line[0].function_name == "memcpy"
+    //    line[1].function_name == "printf"
+    boost::numeric::ublas::vector<Line_t> line;
+    // Provides an indication that multiple symbols map to this location's
+    // address, for example due to identical code folding by the linker. In that
+    // case the line information above represents one of the multiple
+    // symbols. This field must be recomputed when the symbolization state of the
+    // profile changes.
+    bool is_folder;
+
+    //HELPER
+    Mapping_t mapping;
+} Location_t;
 
 typedef struct Profile_s {
     boost::numeric::ublas::vector<int> sample_type;
