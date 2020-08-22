@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     description.add_options()(
             "path", opt::value<std::string>(), "path to the pprof file"
-            );
+    );
 
     opt::variables_map vm;
 
