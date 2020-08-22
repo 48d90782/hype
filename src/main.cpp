@@ -56,9 +56,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    file.
-
-            close();
+    file.close();
 
     return EXIT_SUCCESS;
 }

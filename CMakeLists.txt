@@ -11,9 +11,16 @@ find_package(Catch2 CONFIG REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
-list(APPEND _src
-        src/main.cpp
-        src/types.h)
+file(
+        GLOB
+        _src
+        src/*.cpp
+        include/*.h
+)
+
+#list(APPEND _src
+#        src/main.cpp
+#        src/types.h)
 
 add_executable(hype ${_src})
 target_link_libraries(hype Catch2::Catch2 ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES})
