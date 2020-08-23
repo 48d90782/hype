@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
                 // check is there data gzipped
                 // https://tools.ietf.org/html/rfc1952#page-5
-                if ((buffer[0] == char(0x1f)) and (buffer[1] == char(0x8b))) {
+                if ((buffer[0] == char(0x1f)) && (buffer[1] == char(0x8b))) {
                     // gzipped data
                     file.seekg(0, std::ios::beg);
                     boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
