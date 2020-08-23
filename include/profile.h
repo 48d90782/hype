@@ -229,6 +229,17 @@ typedef struct Profile_s {
 
 } Profile_t;
 
+typedef struct Buffer_s {
+
+} Buffer_t;
+
+typedef enum WireTypes_e {
+    WireVarint = 0,
+    WireFixed64 = 1,
+    WireBytes = 2,
+    WireFixed32 = 5,
+} WireType_t;
+
 #endif //HYPE_PROFILE_H
 
 

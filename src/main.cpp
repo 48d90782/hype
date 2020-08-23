@@ -2,8 +2,11 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <vector>
+#include <boost/container/vector.hpp>
 #include <boost/program_options.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 
 namespace opt = boost::program_options;
 
@@ -29,7 +32,9 @@ int main(int argc, char *argv[]) {
     std::ifstream file;
 
 
-    std::vector<char> buffer;
+    // buffer is the initial file content
+    // it could be compressed
+    boost::container::vector<char> buffer;
     try {
 
         file.open(path, std::ios::binary);
@@ -45,7 +50,13 @@ int main(int argc, char *argv[]) {
                 // check is there data gzipped
                 // https://tools.ietf.org/html/rfc1952#page-5
                 if ((buffer[0] == char(0x1f)) and (buffer[1] == char(0x8b))) {
-                    std::cout << "here" << std::endl;
+                    // gzipped data
+                    file.seekg(0, std::ios::beg);
+                    boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
+                    in.push(boost::iostreams::gzip_decompressor());
+                    in.push(file);
+                    buffer.clear();
+                    buffer.assign(std::istreambuf_iterator<char>{&in}, {});
                 }
             }
         }
@@ -55,6 +66,9 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+    for (auto &a:buffer) {
+        std::cout << a;
+    }
 
     file.close();
 
