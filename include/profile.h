@@ -1,7 +1,8 @@
 #ifndef HYPE_PROFILE_H
 #define HYPE_PROFILE_H
 
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/container/vector.hpp>
+#include <boost/unordered_map.hpp>
 #include <string>
 
 typedef struct ValueType_s {
@@ -17,9 +18,6 @@ typedef struct ValueType_s {
     // index in the string table
     int64_t unit_index;
 } ValueType_t;
-
-typedef struct Sample_s {
-} Sample_t;
 
 // mapping corresponds to Profile.Mapping
 typedef struct Mapping_s {
@@ -51,6 +49,25 @@ typedef struct Mapping_s {
     // Index into string table
     int64_t build_id_index;
 } Mapping_t;
+
+typedef struct Label_s {
+    // Index into string table
+    int64_t key_index;
+
+    // one of the two following values must be set
+    int64_t str_index;
+    // Index into string table
+    int64_t num_index;
+
+    // Should only be present when num is present.
+    // Specifies the units of num.
+    // Use arbitrary string (for example, "requests") as a custom count unit.
+    // If no unit is specified, consumer may apply heuristic to deduce the unit.
+    // Consumers may also  interpret units like "bytes" and "kilobytes" as memory
+    // units and units like "seconds" and "nanoseconds" as time units,
+    // and apply appropriate unit conversions to these.
+    int64_t num_unit_index;
+} Label_t;
 
 typedef struct Function_s {
     // Unique nonzero id for the function.
@@ -106,7 +123,7 @@ typedef struct Location_s {
     // E.g., if memcpy() is inlined into printf:
     //    line[0].function_name == "memcpy"
     //    line[1].function_name == "printf"
-    boost::numeric::ublas::vector<Line_t> line;
+    boost::container::vector<Line_t> line;
     // Provides an indication that multiple symbols map to this location's
     // address, for example due to identical code folding by the linker. In that
     // case the line information above represents one of the multiple
@@ -118,10 +135,79 @@ typedef struct Location_s {
     Mapping_t mapping;
 } Location_t;
 
+typedef struct Sample_s {
+    boost::container::vector<Location_t> location;
+    boost::container::vector<int64_t> value;
+
+    boost::unordered_map<std::string, boost::container::vector<std::string>> label;
+    boost::unordered_map<std::string, boost::container::vector<int64_t>> num_label;
+    boost::unordered_map<std::string, boost::container::vector<std::string>> num_unit_label;
+
+    boost::container::vector<uint64_t> location_index;
+    boost::container::vector<Label_
+
+} Sample_t;
+
 typedef struct Profile_s {
-    boost::numeric::ublas::vector<int> sample_type;
+    boost::container::vector<int> sample_type;
 
 
 } Profile_t;
 
 #endif //HYPE_PROFILE_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
