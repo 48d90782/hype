@@ -135,16 +135,36 @@ typedef struct Location_s {
     Mapping_t mapping;
 } Location_t;
 
+// Each Sample records values encountered in some program
+// context. The program context is typically a stack trace, perhaps
+// augmented with auxiliary information like the thread-id, some
+// indicator of a higher level request being handled etc.
 typedef struct Sample_s {
+    // The ids recorded here correspond to a Profile.location.id.
+    // The leaf is at location_id[0].
     boost::container::vector<Location_t> location;
+    // The type and unit of each value is defined by the corresponding
+    // entry in Profile.sample_type. All samples must have the same
+    // number of values, the same as the length of Profile.sample_type.
+    // When aggregating multiple samples into a single sample, the
+    // result has a list of values that is the elemntwise sum of the
+    // lists of the originals.
     boost::container::vector<int64_t> value;
 
+    // label includes additional context for this sample. It can include
+    // things like a thread id, allocation size, etc
     boost::unordered_map<std::string, boost::container::vector<std::string>> label;
+    // key is label.key_index(in string table), value is associated str_index
+    // entry in Profile.sample_type
     boost::unordered_map<std::string, boost::container::vector<int64_t>> num_label;
+    // label and numbers in string table, key_index is a key
+    // label and unit measurement, key_index also is a key
     boost::unordered_map<std::string, boost::container::vector<std::string>> num_unit_label;
 
+
+    // These types are not present in the proto file
     boost::container::vector<uint64_t> location_index;
-    boost::container::vector<Label_
+    boost::container::vector<Label_t> label_index;
 
 } Sample_t;
 
