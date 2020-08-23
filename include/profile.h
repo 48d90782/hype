@@ -168,9 +168,64 @@ typedef struct Sample_s {
 
 } Sample_t;
 
+// Profile is an in-memory representation of profile.proto
 typedef struct Profile_s {
-    boost::container::vector<int> sample_type;
+    // A description of the samples associated with each Sample.value.
+    // For a cpu profile this might be:
+    //   [["cpu","nanoseconds"]] or [["wall","seconds"]] or [["syscall","count"]]
+    // For a heap profile, this might be:
+    //   [["allocations","count"], ["space","bytes"]],
+    // If one of the values represents the number of events represented
+    // by the sample, by convention it should be at index 0 and use
+    // sample_type.unit == "count".
+    boost::container::vector<ValueType_t> sample_type;
+    // The set of samples recorded in this profile.
+    boost::container::vector<Sample_t> sample;
+    // Mapping from address ranges to the image/binary/library mapped
+    // into that address range.  mapping[0] will be the main binary.
+    boost::container::vector<Mapping_t> mapping;
+    // Useful program location
+    boost::container::vector<Location_t> location;
+    // Functions referenced by locations
+    boost::container::vector<Function_t> function;
+    // A common table for strings referenced by various messages.
+    // string_table[0] must always be "".
+    boost::container::vector<std::string> string_table;
+    // frames with Function.function_name fully matching the following
+    // regexp will be dropped from the samples, along with their successors.
+    std::string drop_frames;
 
+
+    // Index into string table.
+    // frames with Function.function_name fully matching the following
+    // regexp will be kept, even if it matches drop_functions.
+    std::string keep_frames;
+    // The following fields are informational, do not affect
+    // interpretation of results.
+    // Time of collection (UTC) represented as nanoseconds past the epoch.
+    int64_t time_nanos;
+    // Duration of the profile, if a duration makes sense.
+    int64_t duration_nanos;
+    // The kind of events between sampled ocurrences.
+    // e.g [ "cpu","cycles" ] or [ "heap","bytes" ]
+    ValueType_t period_type;
+    // The number of events between sampled occurrences.
+    int64_t period;
+    // Freeform text associated to the profile.
+    boost::container::vector<std::string> comments;
+    // Indices into string table.
+    // Index into the string table of the type of the preferred sample
+    // value. If unset, clients should default to the last sample value.
+    std::string default_sample_type;
+
+    // Index into string table.
+    boost::container::vector<int64_t> comment_index;
+    // Index into string table.
+    int64_t drop_frames_index;
+    // Index into string table.
+    int64_t keep_frames_index;
+    // Index into string table.
+    int64_t default_sample_type_index;
 
 } Profile_t;
 
