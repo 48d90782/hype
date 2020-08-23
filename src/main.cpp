@@ -66,10 +66,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    for (auto &a:buffer) {
-        std::cout << a;
-    }
-
+    // close the file
     file.close();
 
     return EXIT_SUCCESS;
