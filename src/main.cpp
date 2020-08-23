@@ -5,7 +5,7 @@
 #include <boost/container/vector.hpp>
 #include <boost/program_options.hpp>
 #include <boost/iostreams/filtering_streambuf.hpp>
-#include <boost/iostreams/copy.hpp>
+#include <boost/assert.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 
 namespace opt = boost::program_options;
@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+    BOOST_ASSERT(!vm.empty());
     auto path = vm["path"].as<std::string>();
     std::ifstream file;
 
@@ -57,6 +58,7 @@ int main(int argc, char *argv[]) {
                     in.push(file);
                     buffer.clear();
                     buffer.assign(std::istreambuf_iterator<char>{&in}, {});
+                    BOOST_ASSERT(!buffer.empty());
                 }
             }
         }
