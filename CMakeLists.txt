@@ -33,4 +33,4 @@ add_library(hype STATIC ${_src})
 target_link_libraries(hype PRIVATE Catch2::Catch2 ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB)
 
 add_executable(hype_tests src/decoder_test.cpp src/decoder.h)
-target_link_libraries(hype_tests hype ${DEFAULT_LINKER_OPTIONS} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+target_link_libraries(hype_tests PRIVATE hype ${DEFAULT_LINKER_OPTIONS} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)

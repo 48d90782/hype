@@ -14,7 +14,7 @@ public:
 
     uint decode_varint();
     uint64_t decode_fixed64(const boost::container::vector<char> &p);
-    uint32_t decode_fixed32();
+    uint32_t decode_fixed32(const boost::container::vector<char> &p);
     std::string decode_string(const boost::container::vector<char> &p);
 
     ~Decoder();
