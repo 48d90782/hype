@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "Decoder.h"
+#include "decoder.h"
 #include <boost/container/vector.hpp>
 #include <boost/program_options.hpp>
 #include <boost/iostreams/filtering_streambuf.hpp>

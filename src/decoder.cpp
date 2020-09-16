@@ -1,5 +1,7 @@
-#include "Decoder.h"
+#include "decoder.h"
 #include <iostream>
+#include <stdexcept>
+#include <gtest/gtest.h>
 
 uint Decoder::decode_varint() {
     uint u = 0;
@@ -41,4 +43,27 @@ uint Decoder::decode_varint() {
 Decoder::~Decoder() {
     // clear all data
     data_.clear();
+}
+
+uint64_t Decoder::decode_fixed64(const boost::container::vector<char> &p) {
+    if (p.size() < 8) {
+        throw std::runtime_error("vector len is not enough to decode fixed64");
+    }
+
+    return ((uint64_t) p.at(0) |
+            (uint64_t) p.at(1) << 8u |
+            (uint64_t) p.at(2) << 16u |
+            (uint64_t) p.at(3) << 24u |
+            ((uint64_t) p.at(4)) << 32u |
+            ((uint64_t) p.at(5)) << 40u |
+            ((uint64_t) p.at(6)) << 48u |
+            ((uint64_t) p.at(7)) << 56u);
+}
+
+std::string Decoder::decode_string(const boost::container::vector<char> &p) {
+    return std::string(p.begin(), p.end());
+}
+
+TEST(decode_fixed64_test, HandleCorrectVec) {
+    EXPECT_EQ(1, 1);
 }
