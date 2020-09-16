@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include "Decoder.h"
 #include <boost/container/vector.hpp>
 #include <boost/program_options.hpp>
 #include <boost/iostreams/filtering_streambuf.hpp>
@@ -37,7 +38,6 @@ int main(int argc, char *argv[]) {
     // it could be compressed
     boost::container::vector<char> buffer;
     try {
-
         file.open(path, std::ios::binary);
         if (file.is_open()) {
             file.seekg(0, std::ios::end);
@@ -60,6 +60,10 @@ int main(int argc, char *argv[]) {
                     buffer.assign(std::istreambuf_iterator<char>{&in}, {});
                     BOOST_ASSERT(!buffer.empty());
                 }
+
+                Decoder d{buffer};
+                auto res = d.decode_varint();
+                std::cout << res << std::endl;
             }
         }
     } catch (const std::exception &e) {
