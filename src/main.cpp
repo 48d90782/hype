@@ -61,11 +61,11 @@ int main(int argc, char *argv[]) {
                     BOOST_ASSERT(!buffer.empty());
                 }
 
-                Buffer_t buf{0, WireTypes::WireBytes, 0};
-                Profile_t *profile;
+                Buffer_t buf{0, WireBytes, 0};
+                Profile_t profile{};
 
                 Decoder d{};
-                d.decode_message(buf, profile, buffer);
+                d.decode_message(buf, profile, &buffer);
 
             }
         }

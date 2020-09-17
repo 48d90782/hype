@@ -17,7 +17,7 @@ public:
     // decode varint
     uint decode_varint(boost::container::vector<char> *data);
 
-    void decode_message(Buffer_t *buf, Profile_t *prof, boost::container::vector<char> *data);
+    void decode_message(Buffer_t &buf, Profile_t &prof, boost::container::vector<char> *data);
 
     //
     static uint64_t decode_fixed64(const boost::container::vector<char> &p);
@@ -26,9 +26,9 @@ public:
 
     static std::string decode_string(const boost::container::vector<char> &p);
 
-    boost::container::vector<char> decode_field(Buffer_t *buf, boost::container::vector<char> *data);
+    boost::container::vector<char> decode_field(Buffer_t &buf, boost::container::vector<char> *data);
 
-    void decode_profile_field(Profile_t *prof, Buffer_t *buf, boost::container::vector<char> *buf_data);
+    void decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> *buf_data);
 
     ~Decoder() = default;
 };
