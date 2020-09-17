@@ -93,14 +93,16 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::conta
 
     switch (buf.type) {
         case WireBytes: {
-            auto varint = decode_varint(data);
-            buf_data.reserve(varint);
-            std::move(data->begin(), data->begin() + varint, std::back_inserter(buf_data));
-            data->erase(data->begin(), data->begin() + varint);
+            auto var_int = decode_varint(data);
+            buf_data.reserve(var_int);
+            std::move(data->begin(), data->begin() + var_int, std::back_inserter(buf_data));
+            data->erase(data->begin(), data->begin() + var_int);
             return buf_data;
         }
 
         case WireVarint: {
+            auto var_int = decode_varint(data);
+            buf.u64 = var_int;
             break;
         }
 
@@ -125,7 +127,6 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::contai
             ValueType_t vt;
             auto d = vt.decode(buf, buf_data);
             prof.sample_type.push_back(*d);
-            std::cout << "done" << std::endl;
         }
     }
 }

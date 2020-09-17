@@ -28,7 +28,7 @@ public:
 
     boost::container::vector<char> decode_field(Buffer_t &buf, boost::container::vector<char> *data);
 
-    void decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> *buf_data);
+    static void decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> *buf_data);
 
     ~Decoder() = default;
 };
