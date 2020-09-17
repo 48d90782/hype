@@ -7,7 +7,6 @@ set(DEFAULT_LINKER_OPTIONS -pthread)
 find_package(Threads REQUIRED)
 
 find_package(Boost 1.73 REQUIRED COMPONENTS program_options iostreams)
-find_package(Catch2 CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 
@@ -23,14 +22,8 @@ file(
         include/*.h
 )
 
-#list(APPEND _src
-#        src/main.cpp
-#        src/types.h)
-
-#add_executable(hype ${_src})
-
 add_library(hype STATIC ${_src})
-target_link_libraries(hype PRIVATE Catch2::Catch2 ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB)
+target_link_libraries(hype PRIVATE ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB)
 
 add_executable(hype_tests src/decoder_test.cpp src/decoder.h)
 target_link_libraries(hype_tests PRIVATE hype ${DEFAULT_LINKER_OPTIONS} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
