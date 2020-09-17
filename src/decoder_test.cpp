@@ -12,7 +12,7 @@ TEST(decode_fixed64, HandleCorrectVector) {
     sample.push_back(char(105));
     sample.push_back(char(108));
 
-    Decoder d{sample};
+    Decoder d{};
     auto res = d.decode_fixed64(sample);
     ASSERT_EQ(res, 7811887657498189936);
 }
@@ -24,9 +24,20 @@ TEST(decode_fixed32, HandleCorrectVector) {
     sample.push_back(' ');
     sample.push_back('c');
 
-    Decoder d{sample};
+    Decoder d{};
     auto res = d.decode_fixed32(sample);
     ASSERT_EQ(res, 1663053101);
+}
+
+TEST(IteratorTest, IteratorTestMe) {
+    std::vector<int> v1, v2;
+
+    for (int i = 0; i < 100; ++i) {
+        v1.push_back(i);
+    }
+    v2.reserve(v1.size());
+    std::move(v1.begin(), v1.begin() + 5, std::back_inserter(v2));
+    v1.erase(v1.begin(), v1.begin() + 5);
 }
 
 

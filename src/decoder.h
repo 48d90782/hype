@@ -8,18 +8,16 @@
 
 class Decoder {
 public:
-    explicit Decoder(boost::container::vector<char> data, Buffer_t buf) : data_(std::move(data)), buffer_(std::move(buf)) {};
-
-    // no default constructor
-    Decoder() = delete;
+    // default constructor
+    Decoder() = default;
 
     // no assigment
     Decoder &operator=(const Decoder &) = delete;
 
     // decode varint
-    uint decode_varint();
+    uint decode_varint(boost::container::vector<char> *data);
 
-    void decode_message(Profile_t *prof);
+    void decode_message(Buffer_t *buf, Profile_t *prof, boost::container::vector<char> *data);
 
     //
     static uint64_t decode_fixed64(const boost::container::vector<char> &p);
@@ -28,13 +26,11 @@ public:
 
     static std::string decode_string(const boost::container::vector<char> &p);
 
-    boost::container::vector<char> decode_field(Buffer_t *buf);
+    boost::container::vector<char> decode_field(Buffer_t *buf, boost::container::vector<char> *data);
 
-    ~Decoder();
+    void decode_profile_field(Profile_t *prof, Buffer_t *buf, boost::container::vector<char> *buf_data);
 
-private:
-    boost::container::vector<char> data_;
-    Buffer_t buffer_;
+    ~Decoder() = default;
 };
 
 

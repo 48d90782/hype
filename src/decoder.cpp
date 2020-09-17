@@ -2,13 +2,13 @@
 #include <iostream>
 #include <stdexcept>
 
-uint Decoder::decode_varint() {
+uint Decoder::decode_varint(boost::container::vector<char> *data) {
     uint u = 0;
     uint i = 0;
 
     while (true) {
         // Message should be no more than 10 bytes
-        if (i >= 10 || i >= data_.size()) {
+        if (i >= 10 || i >= data->size()) {
             throw std::runtime_error("i more then data size");
         }
 
@@ -25,23 +25,18 @@ uint Decoder::decode_varint() {
         //         01010110         OR
         // 0011101100000000
         // 0011101101010110 = 15190
-        u |= ((unsigned) data_.at(i) & 0x7Fu) << (7 * i);
+        u |= ((unsigned) data->at(i) & 0x7Fu) << (7 * i);
 
         // shl -> safe shift left operation
         // here we check all 8 bits for MSB
         // if all bits are zero, we are done
         // if not, MSB is set and there is presents next byte to read
-        if (((unsigned) data_.at(i) & 0x80u) == 0) {
-            data_.erase(data_.begin(), data_.begin() + i);
+        if (((unsigned) data->at(i) & 0x80u) == 0) {
+            data->erase(data->begin(), data->begin() + i);
             return u;
         }
         i += 1;
     }
-}
-
-Decoder::~Decoder() {
-    // clear all data
-    data_.clear();
 }
 
 uint64_t Decoder::decode_fixed64(const boost::container::vector<char> &p) {
@@ -74,18 +69,21 @@ uint32_t Decoder::decode_fixed32(const boost::container::vector<char> &p) {
             (uint32_t) p.at(3) << 24u);
 }
 
-void Decoder::decode_message(Profile_t *prof) {
-    while (!data_.empty()) {
+void Decoder::decode_message(Buffer_t *buf, Profile_t *prof, boost::container::vector<char> *data) {
+    assert(data != nullptr);
+    assert(buf != nullptr);
+
+    while (!data->empty()) {
         // here we decode data, the algorithm is following:
         // 1. We pass whole data and buffer to the decode_field function
         // 2. As the result we get main data (which drained to the buffer size) and buffer with that drained data filled with other fields
         // 3. We also calculate field, type and u64 fields to pass it to Profile::decode_profile function
-        auto res = decode_field(&buffer_);
+        auto res = decode_field(buf, data);
     }
 }
 
-boost::container::vector<char> Decoder::decode_field(Buffer_t *buf) {
-    auto res = decode_varint();
+boost::container::vector<char> Decoder::decode_field(Buffer_t *buf, boost::container::vector<char> *data) {
+    auto res = decode_varint(data);
     assert(buf != nullptr);
 
     buf->field = res >> 3u;
@@ -95,13 +93,10 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t *buf) {
 
     switch (buf->type) {
         case WireBytes: {
-            std::cout << "wirebytes" << std::endl;
-            auto varint = decode_varint();
+            auto varint = decode_varint(data);
             buf_data.reserve(varint);
-            auto it = std::next(data_.begin(), varint);
-            std::move(data_.begin(), it, std::back_inserter(buf_data));
-            data_.erase(data_.begin(), it);
-            std::cout << buf_data.data() << std::endl;
+            std::move(data->begin(), data->begin() + varint, std::back_inserter(buf_data));
+            data->erase(data->begin(), data->begin() + varint);
             return buf_data;
         }
 
@@ -122,6 +117,18 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t *buf) {
     }
 
     return buf_data;
+}
+
+void Decoder::decode_profile_field(Profile_t *prof, Buffer_t *buf, boost::container::vector<char> *buf_data) {
+    assert(prof != nullptr);
+    switch (buf->field) {
+        case 1: {
+            ValueType_t vt;
+            auto d = vt.decode(buf, buf_data);
+            prof->sample_type.push_back(*d);
+            std::cout << "done" << std::endl;
+        }
+    }
 }
 
 

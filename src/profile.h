@@ -4,6 +4,7 @@
 #include <boost/container/vector.hpp>
 #include <boost/unordered_map.hpp>
 #include <string>
+#include "types.h"
 
 typedef struct ValueType_s {
     // Type and uint do not present in proto file
@@ -17,7 +18,12 @@ typedef struct ValueType_s {
     int64_t type_index;
     // index in the string table
     int64_t unit_index;
+
+public:
+    ValueType_s *decode(Buffer_t *buf, boost::container::vector<char> *data);
 } ValueType_t;
+
+
 
 // mapping corresponds to Profile.Mapping
 typedef struct Mapping_s {

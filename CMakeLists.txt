@@ -19,6 +19,8 @@ file(
         src/types.h
         src/decode.h
         src/decoder.cpp
+        src/profile.h
+        src/profile.cpp
         include/*.h
 )
 

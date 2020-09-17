@@ -64,8 +64,8 @@ int main(int argc, char *argv[]) {
                 Buffer_t buf{0, WireTypes::WireBytes, 0};
                 Profile_t *profile;
 
-                Decoder d{buffer, buf};
-                d.decode_message(profile);
+                Decoder d{};
+                d.decode_message(buf, profile, buffer);
 
             }
         }
