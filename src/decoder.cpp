@@ -60,7 +60,7 @@ uint64_t Decoder::decode_fixed64(const boost::container::vector<char> &p) {
 }
 
 std::string Decoder::decode_string(const boost::container::vector<char> &p) {
-    return std::string(p.begin(), p.end());
+    return std::string{p.begin(), p.end()};
 }
 
 uint32_t Decoder::decode_fixed32(const boost::container::vector<char> &p) {
@@ -73,3 +73,81 @@ uint32_t Decoder::decode_fixed32(const boost::container::vector<char> &p) {
             (uint32_t) p.at(2) << 16u |
             (uint32_t) p.at(3) << 24u);
 }
+
+void Decoder::decode_message(Profile_t *prof) {
+    while (!data_.empty()) {
+        // here we decode data, the algorithm is following:
+        // 1. We pass whole data and buffer to the decode_field function
+        // 2. As the result we get main data (which drained to the buffer size) and buffer with that drained data filled with other fields
+        // 3. We also calculate field, type and u64 fields to pass it to Profile::decode_profile function
+        auto res = decode_field(&buffer_);
+    }
+}
+
+boost::container::vector<char> Decoder::decode_field(Buffer_t *buf) {
+    auto res = decode_varint();
+    assert(buf != nullptr);
+
+    buf->field = res >> 3u;
+    buf->type = WireTypes(res & 7u);
+    buf->u64 = 0;
+    boost::container::vector<char> buf_data{};
+
+    switch (buf->type) {
+        case WireBytes: {
+            std::cout << "wirebytes" << std::endl;
+            auto varint = decode_varint();
+            buf_data.reserve(varint);
+            auto it = std::next(data_.begin(), varint);
+            std::move(data_.begin(), it, std::back_inserter(buf_data));
+            data_.erase(data_.begin(), it);
+            std::cout << buf_data.data() << std::endl;
+            return buf_data;
+        }
+
+        case WireVarint: {
+            break;
+        }
+
+        case WireFixed32: {
+            break;
+        }
+
+        case WireFixed64: {
+            break;
+        }
+
+        default:
+            throw std::runtime_error("unknown type");
+    }
+
+    return buf_data;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

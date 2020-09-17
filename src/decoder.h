@@ -4,11 +4,11 @@
 #include <utility>
 #include <boost/container/vector.hpp>
 #include "types.h"
-
+#include "profile.h"
 
 class Decoder {
 public:
-    explicit Decoder(boost::container::vector<char> data) : data_(std::move(data)) {};
+    explicit Decoder(boost::container::vector<char> data, Buffer_t buf) : data_(std::move(data)), buffer_(std::move(buf)) {};
 
     // no default constructor
     Decoder() = delete;
@@ -19,6 +19,8 @@ public:
     // decode varint
     uint decode_varint();
 
+    void decode_message(Profile_t *prof);
+
     //
     static uint64_t decode_fixed64(const boost::container::vector<char> &p);
 
@@ -26,11 +28,13 @@ public:
 
     static std::string decode_string(const boost::container::vector<char> &p);
 
+    boost::container::vector<char> decode_field(Buffer_t *buf);
+
     ~Decoder();
 
 private:
     boost::container::vector<char> data_;
-    Buffer buffer_;
+    Buffer_t buffer_;
 };
 
 

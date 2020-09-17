@@ -61,9 +61,12 @@ int main(int argc, char *argv[]) {
                     BOOST_ASSERT(!buffer.empty());
                 }
 
-                Decoder d{buffer};
-                auto res = d.decode_varint();
-                std::cout << res << std::endl;
+                Buffer_t buf{0, WireTypes::WireBytes, 0};
+                Profile_t *profile;
+
+                Decoder d{buffer, buf};
+                d.decode_message(profile);
+
             }
         }
     } catch (const std::exception &e) {

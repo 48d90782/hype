@@ -27,3 +27,6 @@ target_link_libraries(hype PRIVATE ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} 
 
 add_executable(hype_tests src/decoder_test.cpp src/decoder.h)
 target_link_libraries(hype_tests PRIVATE hype ${DEFAULT_LINKER_OPTIONS} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+
+add_executable(hype_run ${_src})
+target_link_libraries(hype_run ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB)
