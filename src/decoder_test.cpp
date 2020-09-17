@@ -17,6 +17,18 @@ TEST(decode_fixed64, HandleCorrectVector) {
     ASSERT_EQ(res, 7811887657498189936);
 }
 
+TEST(decode_fixed32, HandleCorrectVector) {
+    boost::container::vector<char> sample;
+    sample.push_back('-');
+    sample.push_back('-');
+    sample.push_back(' ');
+    sample.push_back('c');
+
+    Decoder d{sample};
+    auto res = d.decode_fixed32(sample);
+    ASSERT_EQ(res, 1663053101);
+}
+
 
 int main() {
     testing::InitGoogleTest();
