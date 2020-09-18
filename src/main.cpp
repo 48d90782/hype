@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
                 Decoder d{};
                 d.decode_message(buf, profile, buffer);
-
+                std::cout << "done" << std::endl;
             }
         }
     } catch (const std::exception &e) {

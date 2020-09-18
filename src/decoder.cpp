@@ -132,8 +132,50 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::contai
         case 1: {
             ValueType_t vt;
             auto d = vt.decode(buf, buf_data);
-            prof.sample_type.push_back(*d);
+            prof.sample_type.push_back(d);
+            break;
         }
+        case 2: {
+            break;
+        }
+        case 3: {
+            break;
+        }
+        case 4: {
+            break;
+        }
+        case 5: {
+            break;
+        }
+        case 6: {
+            break;
+        }
+        case 7: {
+            break;
+        }
+        case 8: {
+            break;
+        }
+        case 9: {
+            break;
+        }
+        case 10: {
+            break;
+        }
+        case 11: {
+            break;
+        }
+        case 12: {
+            break;
+        }
+        case 13: {
+            break;
+        }
+        case 14: {
+            break;
+        }
+        default:
+            break;
     }
 }
 
