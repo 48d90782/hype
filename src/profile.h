@@ -20,7 +20,7 @@ typedef struct ValueType_s {
     int64_t unit_index;
 
 public:
-    ValueType_s *decode(Buffer_t &buf, boost::container::vector<char> *data);
+    ValueType_s *decode(Buffer_t &buf, boost::container::vector<char> &data);
 } ValueType_t;
 
 

@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
                 Profile_t profile{};
 
                 Decoder d{};
-                d.decode_message(buf, profile, &buffer);
+                d.decode_message(buf, profile, buffer);
 
             }
         }

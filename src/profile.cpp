@@ -2,11 +2,11 @@
 #include "decoder.h"
 #include <stdexcept>
 
-ValueType_s *ValueType_s::decode(Buffer_t &buf, boost::container::vector<char> *data) {
+ValueType_s *ValueType_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
     type_index = 0;
     unit_index = 0;
 
-    while (!data->empty()) {
+    while (!data.empty()) {
         Decoder decoder;
         decoder.decode_field(buf, data);
         switch (buf.field) {
