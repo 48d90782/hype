@@ -16,11 +16,10 @@ file(
         GLOB
         _src
         src/main.cpp
-        src/types.h
         src/decode.h
         src/decoder.cpp
-        src/profile.h
-        src/profile.cpp
+        src/types.h
+        src/types.cpp
         include/*.h
 )
 
