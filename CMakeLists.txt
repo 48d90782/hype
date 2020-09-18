@@ -18,8 +18,8 @@ file(
         src/main.cpp
         src/decode.h
         src/decoder.cpp
-        src/types.h
-        src/types.cpp
+        src/profile.h
+        src/profile.cpp
         include/*.h
 )
 

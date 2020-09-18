@@ -3,7 +3,6 @@
 
 #include <utility>
 #include <boost/container/vector.hpp>
-#include "types.h"
 #include "profile.h"
 
 class Decoder {

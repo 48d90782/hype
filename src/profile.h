@@ -1,5 +1,5 @@
-#ifndef HYPE_TYPES_H
-#define HYPE_TYPES_H
+#ifndef HYPE_PROFILE_H
+#define HYPE_PROFILE_H
 
 #include <cstdlib>
 #include <utility>
@@ -252,4 +252,4 @@ typedef struct Profile_s {
 
 } Profile_t;
 
-#endif //HYPE_TYPES_H
+#endif //HYPE_PROFILE_H
