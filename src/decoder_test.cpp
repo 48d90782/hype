@@ -12,8 +12,7 @@ TEST(decode_fixed64, HandleCorrectVector) {
     sample.push_back(char(105));
     sample.push_back(char(108));
 
-    Decoder d{};
-    auto res = d.decode_fixed64(sample);
+    auto res = Decoder::decode_fixed64(sample);
     ASSERT_EQ(res, 7811887657498189936);
 }
 
@@ -24,8 +23,7 @@ TEST(decode_fixed32, HandleCorrectVector) {
     sample.push_back(' ');
     sample.push_back('c');
 
-    Decoder d{};
-    auto res = d.decode_fixed32(sample);
+    auto res = Decoder::decode_fixed32(sample);
     ASSERT_EQ(res, 1663053101);
 }
 
