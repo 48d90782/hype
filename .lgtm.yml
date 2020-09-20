@@ -5,6 +5,6 @@ extraction:
         - "git clone https://github.com/microsoft/vcpkg"
         - "./vcpkg/bootstrap-vcpkg.sh -disableMetrics"
         - "cd vcpkg"
-        - "./vcpkg install boost"
+        - "./vcpkg install boost-iostreams boost-program-options zlib gtest"
     index:
       build_command: ""
