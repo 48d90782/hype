@@ -1,0 +1,10 @@
+extraction:
+  cpp:
+    configure:
+      command:
+        - "git clone https://github.com/microsoft/vcpkg"
+        - "./vcpkg/bootstrap-vcpkg.sh -disableMetrics"
+        - "cd vcpkg"
+        - "./vcpkg install boost"
+    index:
+      build_command: ""
