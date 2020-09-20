@@ -3,7 +3,13 @@ project(hype LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+IF(WIN32)
+    message("windows platform detected")
+ELSE()
+    message("linux platform detected")
 set(DEFAULT_LINKER_OPTIONS -pthread)
+ENDIF()
+
 find_package(Threads REQUIRED)
 
 find_package(Boost 1.73 REQUIRED COMPONENTS program_options iostreams)
