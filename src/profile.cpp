@@ -96,3 +96,71 @@ Mapping_s Mapping_s::decode(Buffer_t &buf, boost::container::vector<char> &data)
 
     return *this;
 }
+
+
+Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+    while (!data.empty()) {
+        auto res = Decoder::decode_field(buf, data);
+        switch (buf.field) {
+            case 1: {
+                if (buf.type == WireBytes) {
+                    while (!res.empty()) {
+                        auto var_int = Decoder::decode_varint(res);
+                        location_index.push_back(var_int);
+                    }
+                    continue;
+                }
+
+                assert(buf.type == WireVarint);
+                location_index.push_back(buf.u64);
+            }
+            case 2: {
+                if (buf.type == WireBytes) {
+                    while (!res.empty()) {
+                        auto var_int = Decoder::decode_varint(res);
+                        value.push_back(var_int);
+                    }
+                    continue;
+                }
+                assert(buf.type == WireVarint);
+                value.push_back(buf.u64);
+            }
+            case 3: {
+                Label_t l;
+                auto lbl = l.decode(buf, data);
+                label_index.push_back(lbl);
+            }
+        }
+
+    }
+    return *this;
+}
+
+Label_s Label_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+    key_index = 0;
+    str_index = 0;
+    num_index = 0;
+    num_unit_index = 0;
+
+    while (!data.empty()) {
+        Decoder::decode_field(buf, data);
+        switch (buf.field) {
+            case 1:
+                key_index = buf.u64;
+                break;
+            case 2:
+                str_index = buf.u64;
+                break;
+            case 3:
+                num_index = buf.u64;
+                break;
+            case 4:
+                num_unit_index = buf.u64;
+                break;
+            default:
+                throw std::runtime_error("unknown label type");
+        }
+    }
+
+    return *this;
+}

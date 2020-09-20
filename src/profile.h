@@ -91,6 +91,8 @@ typedef struct Label_s {
     // units and units like "seconds" and "nanoseconds" as time units,
     // and apply appropriate unit conversions to these.
     int64_t num_unit_index;
+
+    Label_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 } Label_t;
 
 typedef struct Function_s {
@@ -189,6 +191,8 @@ typedef struct Sample_s {
     // These types are not present in the proto file
     boost::container::vector<uint64_t> location_index;
     boost::container::vector<Label_t> label_index;
+
+    Sample_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 
 } Sample_t;
 

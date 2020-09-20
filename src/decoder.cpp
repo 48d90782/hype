@@ -83,7 +83,6 @@ void Decoder::decode_message(Buffer_t &buf, Profile_t &prof, boost::container::v
 boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::container::vector<char> &data) {
     auto res = Decoder::decode_varint(data);
 
-    std::cout << (res & 7u) << std::endl;
     buf.field = res >> 3u;
     buf.type = WireTypes(res & 7u);
     buf.u64 = 0;
@@ -127,20 +126,23 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::conta
     return buf_data;
 }
 
-void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> &buf_data) {
+void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> &data) {
     switch (buf.field) {
         case 1: {
             ValueType_t vt;
-            auto d = vt.decode(buf, buf_data);
+            auto d = vt.decode(buf, data);
             prof.sample_type.push_back(d);
             break;
         }
         case 2: {
+            Sample_t st;
+            auto s = st.decode(buf, data);
+            prof.sample.push_back(s);
             break;
         }
         case 3: {
             Mapping_t mp;
-            auto res = mp.decode(buf, buf_data);
+            auto res = mp.decode(buf, data);
             prof.mapping.push_back(res);
             break;
         }
