@@ -2,9 +2,9 @@
 #include <iostream>
 #include <stdexcept>
 
-uint Decoder::decode_varint(boost::container::vector<char> &data) {
-    uint u = 0;
-    uint i = 0;
+uint64_t Decoder::decode_varint(boost::container::vector<char> &data) {
+    uint64_t u = 0;
+    uint64_t i = 0;
 
     while (true) {
         // Message should be no more than 10 bytes
