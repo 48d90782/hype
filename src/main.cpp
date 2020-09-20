@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     BOOST_ASSERT(!vm.empty());
     auto path = vm["path"].as<std::string>();
-    std::unique_ptr<std::ifstream> file;
+    std::unique_ptr<std::ifstream> file = std::make_unique<std::ifstream>();
 
 
     // buffer is the initial file content

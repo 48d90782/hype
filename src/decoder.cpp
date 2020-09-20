@@ -139,6 +139,9 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::contai
             break;
         }
         case 3: {
+            Mapping_t mp;
+            auto res = mp.decode(buf, buf_data);
+            prof.mapping.push_back(res);
             break;
         }
         case 4: {

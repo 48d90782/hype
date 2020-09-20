@@ -37,7 +37,6 @@ typedef struct ValueType_s {
     // index in the string table
     int64_t unit_index;
 
-public:
     ValueType_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 } ValueType_t;
 
@@ -71,6 +70,8 @@ typedef struct Mapping_s {
     int64_t filename_index;
     // Index into string table
     int64_t build_id_index;
+
+    Mapping_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 } Mapping_t;
 
 typedef struct Label_s {
