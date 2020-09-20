@@ -1,7 +1,7 @@
-# hype
-Hype is a pprof tool powered with GTK UI
+# hype [Work in Progress]
+Hype is a pprof tool powered with UI (windows, osx, linux)
 
-#TODO
+### TODO
 
 - [ ] vcpkg as C++ package manager
 - [ ] Boost program options as CLI
