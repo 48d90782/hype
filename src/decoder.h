@@ -16,7 +16,7 @@ public:
     // decode varint
     static uint decode_varint(boost::container::vector<char> &data);
 
-    void decode_message(Buffer_t &buf, Profile_t &prof, boost::container::vector<char> &data);
+    static void decode_message(Buffer_t &buf, Profile_t &prof, boost::container::vector<char> &data);
 
     //
     static uint64_t decode_fixed64(const boost::container::vector<char> &p);

@@ -31,31 +31,31 @@ int main(int argc, char *argv[]) {
 
     BOOST_ASSERT(!vm.empty());
     auto path = vm["path"].as<std::string>();
-    std::ifstream file;
+    std::unique_ptr<std::ifstream> file;
 
 
     // buffer is the initial file content
     // it could be compressed
     boost::container::vector<char> buffer;
     try {
-        file.open(path, std::ios::binary);
-        if (file.is_open()) {
-            file.seekg(0, std::ios::end);
-            size_t length = file.tellg();
-            file.seekg(0, std::ios::beg);
+        file->open(path, std::ios::binary);
+        if (file->is_open()) {
+            file->seekg(0, std::ios::end);
+            size_t length = file->tellg();
+            file->seekg(0, std::ios::beg);
 
             if (length > 0) {
                 buffer.resize(length);
-                file.read(&buffer[0], length);
+                file->read(&buffer[0], length);
 
                 // check is there data gzipped
                 // https://tools.ietf.org/html/rfc1952#page-5
                 if ((buffer[0] == char(0x1f)) && (buffer[1] == char(0x8b))) {
                     // gzipped data
-                    file.seekg(0, std::ios::beg);
+                    file->seekg(0, std::ios::beg);
                     boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
                     in.push(boost::iostreams::gzip_decompressor());
-                    in.push(file);
+                    in.push(*file); // deref smart pointer
                     buffer.clear();
                     buffer.assign(std::istreambuf_iterator<char>{&in}, {});
                     BOOST_ASSERT(!buffer.empty());
@@ -64,19 +64,18 @@ int main(int argc, char *argv[]) {
                 Buffer_t buf{0, WireBytes, 0};
                 Profile_t profile{};
 
-                Decoder d{};
-                d.decode_message(buf, profile, buffer);
+                Decoder::decode_message(buf, profile, buffer);
                 std::cout << "done" << std::endl;
             }
         }
-    } catch (const std::exception &e) {
+    } catch (const std::exception &e) { // catch all exceptions here
         std::cout << e.what() << std::endl;
-        file.close();
+        file->close();
         return EXIT_FAILURE;
     }
 
-    // close the file
-    file.close();
+    // close the file (good path)
+    file->close();
 
     return EXIT_SUCCESS;
 }
