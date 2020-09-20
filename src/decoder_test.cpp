@@ -27,18 +27,16 @@ TEST(decode_fixed32, HandleCorrectVector) {
     ASSERT_EQ(res, 1663053101);
 }
 
-TEST(IteratorTest, IteratorTestMe) {
-    std::vector<int> v1, v2;
-
-    for (int i = 0; i < 100; ++i) {
-        v1.push_back(i);
-    }
-
-    v1.erase(v1.begin(), v1.begin() + 2);
-    v2.reserve(v1.size());
-//    std::move(v1.begin(), v1.begin() + 5, std::back_inserter(v2));
-//    v1.erase(v1.begin(), v1.begin() + 5);
-}
+//TEST(IteratorTest, IteratorTestMe) {
+//    std::vector<int> v1, v2;
+//
+//    for (int i = 0; i < 100; ++i) {
+//        v1.push_back(i);
+//    }
+//
+//    v1.erase(v1.begin(), v1.begin() + 2);
+//    v2.reserve(v1.size());
+//}
 
 
 int main() {

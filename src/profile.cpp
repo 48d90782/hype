@@ -7,8 +7,7 @@ ValueType_s ValueType_s::decode(Buffer_t &buf, boost::container::vector<char> &d
     unit_index = 0;
 
     while (!data.empty()) {
-        Decoder decoder;
-        decoder.decode_field(buf, data);
+        Decoder::decode_field(buf, data);
         switch (buf.field) {
             case 1: {
                 this->type_index = buf.u64;

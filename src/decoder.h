@@ -14,7 +14,7 @@ public:
     Decoder &operator=(const Decoder &) = delete;
 
     // decode varint
-    uint decode_varint(boost::container::vector<char> &data);
+    static uint decode_varint(boost::container::vector<char> &data);
 
     void decode_message(Buffer_t &buf, Profile_t &prof, boost::container::vector<char> &data);
 
@@ -25,7 +25,7 @@ public:
 
     static std::string decode_string(const boost::container::vector<char> &p);
 
-    boost::container::vector<char> decode_field(Buffer_t &buf, boost::container::vector<char> &data);
+    static boost::container::vector<char> decode_field(Buffer_t &buf, boost::container::vector<char> &data);
 
     static void decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> &buf_data);
 

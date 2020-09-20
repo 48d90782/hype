@@ -81,7 +81,7 @@ void Decoder::decode_message(Buffer_t &buf, Profile_t &prof, boost::container::v
 }
 
 boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::container::vector<char> &data) {
-    auto res = decode_varint(data);
+    auto res = Decoder::decode_varint(data);
 
     std::cout << (res & 7u) << std::endl;
     buf.field = res >> 3u;
@@ -91,7 +91,7 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::conta
 
     switch (buf.type) {
         case WireBytes: {
-            auto var_int = decode_varint(data);
+            auto var_int = Decoder::decode_varint(data);
             buf_data.reserve(var_int);
             std::move(data.begin(), data.begin() + var_int, std::back_inserter(buf_data));
             data.erase(data.begin(), data.begin() + var_int);
@@ -99,13 +99,13 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::conta
         }
 
         case WireVarint: {
-            auto var_int = decode_varint(data);
+            auto var_int = Decoder::decode_varint(data);
             buf.u64 = var_int;
             break;
         }
 
         case WireFixed32: {
-            buf.u64 = decode_fixed32(data);
+            buf.u64 = Decoder::decode_fixed32(data);
             buf_data.reserve(4);
             std::move(data.begin(), data.begin() + 4, std::back_inserter(buf_data));
             data.erase(data.begin(), data.begin() + 4);
@@ -113,7 +113,7 @@ boost::container::vector<char> Decoder::decode_field(Buffer_t &buf, boost::conta
         }
 
         case WireFixed64: {
-            buf.u64 = decode_fixed64(data);
+            buf.u64 = Decoder::decode_fixed64(data);
             buf_data.reserve(8);
             std::move(data.begin(), data.begin() + 8, std::back_inserter(buf_data));
             data.erase(data.begin(), data.begin() + 8);
