@@ -1,7 +1,10 @@
-# hype
-Hype is a pprof tool powered with GTK UI
+# hype [Work in Progress]
+Hype is a pprof tool powered with UI (windows, osx, linux)
 
-#TODO
+### TODO
 
-- [ ] Download Boost libraries via CMake independently
-- [ ] Boost program options as CLI
+- [x] vcpkg as C++ package manager
+- [x] Boost program options as CLI
+- [ ] Decoder for the Profile
+- [ ] Http server to auto fetch data from golang app (drogon or asio)
+- [ ] GUI (GTK or QT)
