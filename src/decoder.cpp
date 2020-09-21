@@ -147,6 +147,8 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::contai
             break;
         }
         case 4: {
+            Location_t loc;
+            prof.location.push_back(loc.decode(buf, data));
             break;
         }
         case 5: {

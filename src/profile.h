@@ -125,6 +125,8 @@ typedef struct Line_s {
 
     // HELPERS
     Function_t function;
+
+    Line_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 } Line_t;
 
 // Describes function and line table debug information.
@@ -159,6 +161,8 @@ typedef struct Location_s {
 
     //HELPER
     Mapping_t mapping;
+
+    Location_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 } Location_t;
 
 // Each Sample records values encountered in some program

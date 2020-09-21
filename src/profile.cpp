@@ -164,3 +164,70 @@ Label_s Label_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
 
     return *this;
 }
+
+Location_s Location_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+    id = 0;
+    mapping_index = 0;
+    address = false;
+    line = {};
+    is_folder = false;
+    mapping = {};
+
+    while (!data.empty()) {
+        auto decode_res = Decoder::decode_field(buf, data);
+        switch (buf.field) {
+            case 1: {
+                id = buf.u64;
+                break;
+            }
+            case 2: {
+                mapping_index = buf.u64;
+                break;
+            }
+            case 3: {
+                address = buf.u64;
+                break;
+            }
+            case 4: {
+                Line_t ln{};
+                line.push_back(ln.decode(buf, decode_res));
+                break;
+            }
+            case 5: {
+                if (buf.u64 == 0) {
+                    is_folder = false;
+                } else {
+                    is_folder = true;
+                }
+                break;
+            }
+
+            default:
+                throw std::runtime_error("unknown type of location");
+        }
+    }
+
+    return *this;
+}
+
+Line_s Line_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+    function_index = 0;
+    line = 0;
+    while (!data.empty()) {
+        Decoder::decode_field(buf, data);
+        switch (buf.field) {
+            case 1: {
+                function_index = buf.u64;
+                break;
+            }
+            case 2: {
+                line = buf.u64;
+                break;
+            }
+
+            default:
+                throw std::runtime_error("unknown type of line");
+        }
+    }
+    return *this;
+}
