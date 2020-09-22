@@ -7,4 +7,7 @@ extraction:
         - "cd vcpkg"
         - "./vcpkg install boost-iostreams boost-program-options zlib gtest"
     index:
-      build_command: ""
+      build_command:
+        - "mkdir build && cd build"
+        - "cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/src/vcpkg/scripts/buildsystems/vcpkg.cmake ../"
+        - "cmake --build ."
