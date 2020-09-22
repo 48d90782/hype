@@ -115,6 +115,8 @@ typedef struct Function_s {
     int64_t system_name_index;
     // Index into string table
     int64_t filename_index;
+
+    Function_s decode(Buffer_t &buf, boost::container::vector<char> &data);
 } Function_t;
 
 typedef struct Line_s {

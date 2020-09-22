@@ -231,3 +231,70 @@ Line_s Line_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
     }
     return *this;
 }
+
+Function_s Function_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+    id = 0;
+    name = std::string{};
+    system_name = std::string{};
+    filename = std::string{};
+    start_line = 0;
+
+    name_index = 0;
+    system_name_index = 0;
+    filename_index = 0;
+
+    while (!data.empty()) {
+        Decoder::decode_field(buf, data);
+        switch (buf.field) {
+            case 1: {
+                id = buf.u64;
+                break;
+            }
+            case 2: {
+                name_index = buf.u64;
+                break;
+            }
+            case 3: {
+                system_name_index = buf.u64;
+                break;
+            }
+            case 4: {
+                filename_index = buf.u64;
+                break;
+            }
+            case 5: {
+                start_line = buf.u64;
+            }
+            default:
+                throw std::runtime_error("unknown function case");
+        }
+    }
+
+    return *this;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
