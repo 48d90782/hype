@@ -3,6 +3,9 @@ extraction:
     prepare:
       packages:
         - cmake
+        - boost
+        - gtest
+        - zlib
     configure:
       command:
         - "git clone https://github.com/microsoft/vcpkg"
@@ -12,5 +15,5 @@ extraction:
     index:
       build_command:
         - "mkdir build && cd build"
-        - "cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/src/vcpkg/scripts/buildsystems/vcpkg.cmake ../"
+        - "cmake -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/src/vcpkg/scripts/buildsystems/vcpkg.cmake ../"
         - "cmake --build ."
