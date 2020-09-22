@@ -272,29 +272,3 @@ Function_s Function_s::decode(Buffer_t &buf, boost::container::vector<char> &dat
 
     return *this;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

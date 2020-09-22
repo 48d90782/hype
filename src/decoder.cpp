@@ -25,7 +25,7 @@ uint64_t Decoder::decode_varint(boost::container::vector<char> &data) {
         //         01010110         OR
         // 0011101100000000
         // 0011101101010110 = 15190
-        u |= ((unsigned) data.at(i) & 0x7Fu) << (7 * i);
+        u |= (uint64_t )((unsigned) data.at(i) & 0x7Fu) << (7 * i);
 
         // shl -> safe shift left operation
         // here we check all 8 bits for MSB
@@ -76,7 +76,8 @@ void Decoder::decode_message(Buffer_t &buf, Profile_t &prof, boost::container::v
         // 2. As the result we get main data (which drained to the buffer size) and buffer with that drained data filled with other fields
         // 3. We also calculate field, type and u64 fields to pass it to Profile::decode_profile function
         auto res = decode_field(buf, data);
-        decode_profile_field(prof, buf, res);
+        // TODO return type, not void
+        Decoder::decode_profile_field(prof, buf, res);
     }
 }
 
@@ -152,33 +153,60 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::contai
             break;
         }
         case 5: {
+            Function_t f;
+            prof.function.push_back(f.decode(buf, data));
             break;
         }
         case 6: {
+            prof.string_table.push_back(Decoder::decode_string(data));
+            if (!prof.string_table.at(0).empty()) {
+                throw std::runtime_error("string table[0] should be empty");
+            }
             break;
         }
         case 7: {
+            prof.drop_frames_index = buf.u64;
             break;
         }
         case 8: {
+            prof.keep_frames_index = buf.u64;
             break;
         }
         case 9: {
+            if (prof.time_nanos != 0) {
+                throw std::runtime_error("concatenated profiles detected");
+            }
+            prof.time_nanos = buf.u64;
             break;
         }
         case 10: {
+            prof.duration_nanos = buf.u64;
             break;
         }
         case 11: {
+            ValueType_t vt;
+            prof.period_type = vt.decode(buf, data);
             break;
         }
         case 12: {
+            prof.period = buf.u64;
             break;
         }
         case 13: {
+            switch (buf.type) {
+                case WireBytes: {
+                    while (!data.empty()) {
+                        prof.comment_index.push_back(Decoder::decode_varint(data));
+                    }
+                    break;
+                }
+                default:
+                    prof.comment_index.push_back(buf.u64);
+            }
             break;
         }
         case 14: {
+            prof.default_sample_type_index = buf.u64;
             break;
         }
         default:

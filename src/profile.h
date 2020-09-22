@@ -260,7 +260,6 @@ typedef struct Profile_s {
     int64_t keep_frames_index;
     // Index into string table.
     int64_t default_sample_type_index;
-
 } Profile_t;
 
 #endif //HYPE_PROFILE_H
