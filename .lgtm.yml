@@ -3,9 +3,6 @@ extraction:
     prepare:
       packages:
         - cmake
-        - boost
-        - gtest
-        - zlib
     configure:
       command:
         - "git clone https://github.com/microsoft/vcpkg"
