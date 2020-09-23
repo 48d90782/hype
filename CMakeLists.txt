@@ -12,7 +12,7 @@ ENDIF()
 
 find_package(Threads REQUIRED)
 
-find_package(Boost 1.67 REQUIRED COMPONENTS program_options iostreams)
+find_package(Boost 1.73 REQUIRED COMPONENTS program_options iostreams)
 find_package(ZLIB REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 
