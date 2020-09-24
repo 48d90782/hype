@@ -226,12 +226,13 @@ std::string get_string(boost::container::vector<std::string> strings, int64_t fi
 void Decoder::post_decode(Profile_t &prof) {
     spdlog::get("console")->info("starting post decode step");
     std::unordered_map<uint64_t, Mapping_t> mappings;
-    Mapping_t mappingsIds[prof.mapping.size()];
+    Mapping_t mappingsIds[prof.mapping.size() + 1];
+
 
     for (auto &m: prof.mapping) {
         m.filename = get_string(prof.string_table, m.filename_index);
         m.build_id = get_string(prof.string_table, m.build_id_index);
-        if (m.id < sizeof(mappingsIds)) {
+        if (m.id < prof.mapping.size() + 1) {
             mappingsIds[m.id] = m;
         } else {
             mappings[m.id] = m;
