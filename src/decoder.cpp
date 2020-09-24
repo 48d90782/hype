@@ -1,5 +1,6 @@
 #include "decoder.h"
-#include <iostream>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 #include <stdexcept>
 
 uint64_t Decoder::decode_varint(boost::container::vector<char> &data) {
@@ -25,7 +26,7 @@ uint64_t Decoder::decode_varint(boost::container::vector<char> &data) {
         //         01010110         OR
         // 0011101100000000
         // 0011101101010110 = 15190
-        u |= (uint64_t )((unsigned) data.at(i) & 0x7Fu) << (7 * i);
+        u |= (uint64_t) ((unsigned) data.at(i) & 0x7Fu) << (7 * i);
 
         // shl -> safe shift left operation
         // here we check all 8 bits for MSB
@@ -212,6 +213,36 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::contai
         default:
             break;
     }
+}
+
+std::string get_string(boost::container::vector<std::string> strings, int64_t filename_index) {
+    if (filename_index < 0 || filename_index > strings.size()) {
+        throw std::runtime_error("malformed profile format");
+    }
+
+    return strings.at(filename_index);
+}
+
+void Decoder::post_decode(Profile_t &prof) {
+    spdlog::get("console")->info("starting post decode step");
+    std::unordered_map<uint64_t, Mapping_t> mappings;
+    Mapping_t mappingsIds[prof.mapping.size()];
+
+    for (auto &m: prof.mapping) {
+        m.filename = get_string(prof.string_table, m.filename_index);
+        m.build_id = get_string(prof.string_table, m.build_id_index);
+        if (m.id < sizeof(mappingsIds)) {
+            mappingsIds[m.id] = m;
+        } else {
+            mappings[m.id] = m;
+        }
+    }
+
+
+}
+
+std::string Decoder::to_string(const Profile_t &prof) {
+    return std::string();
 }
 
 

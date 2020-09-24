@@ -15,6 +15,7 @@ find_package(Threads REQUIRED)
 find_package(Boost 1.73 REQUIRED COMPONENTS program_options iostreams)
 find_package(ZLIB REQUIRED)
 find_package(GTest CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
@@ -30,10 +31,10 @@ file(
 )
 
 add_library(hype STATIC ${_src})
-target_link_libraries(hype PRIVATE ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB)
+target_link_libraries(hype PRIVATE ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB spdlog::spdlog spdlog::spdlog_header_only)
 
 add_executable(hype_tests src/decoder_test.cpp src/decoder.h)
-target_link_libraries(hype_tests PRIVATE hype ${DEFAULT_LINKER_OPTIONS} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+target_link_libraries(hype_tests PRIVATE hype ${DEFAULT_LINKER_OPTIONS} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main spdlog::spdlog spdlog::spdlog_header_only)
 
 add_executable(hype_run ${_src})
-target_link_libraries(hype_run ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB)
+target_link_libraries(hype_run ${DEFAULT_LINKER_OPTIONS} ${Boost_LIBRARIES} ZLIB::ZLIB spdlog::spdlog spdlog::spdlog_header_only)

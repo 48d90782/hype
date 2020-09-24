@@ -8,10 +8,13 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/assert.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace opt = boost::program_options;
 
 int main(int argc, char *argv[]) {
+    auto console = spdlog::stdout_color_mt("console");
     opt::options_description description("All options");
 
     description.add_options()(
@@ -38,6 +41,7 @@ int main(int argc, char *argv[]) {
     // it could be compressed
     boost::container::vector<char> buffer;
     try {
+        spdlog::get("console")->info("start reading the file");
         file->open(path, std::ios::binary);
         if (file->is_open()) {
             file->seekg(0, std::ios::end);
@@ -65,6 +69,7 @@ int main(int argc, char *argv[]) {
                 Profile_t profile{};
 
                 Decoder::decode_message(buf, profile, buffer);
+                Decoder::post_decode(profile);
                 std::cout << "done" << std::endl;
             }
         }

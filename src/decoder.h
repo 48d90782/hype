@@ -29,6 +29,10 @@ public:
 
     static void decode_profile_field(Profile_t &prof, Buffer_t &buf, boost::container::vector<char> &buf_data);
 
+    static void post_decode(Profile_t &prof);
+
+    static std::string to_string(const Profile_t &prof);
+
     ~Decoder() = default;
 };
 
