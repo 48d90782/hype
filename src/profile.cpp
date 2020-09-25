@@ -2,12 +2,12 @@
 #include "decoder.h"
 #include <stdexcept>
 
-ValueType_s ValueType_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+ValueType_s ValueType_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
     type_index = 0;
     unit_index = 0;
 
-    while (!data.empty()) {
-        Decoder::decode_field(buf, data);
+    while (fp.len != 0) {
+        Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1: {
                 this->type_index = buf.u64;
@@ -25,7 +25,7 @@ ValueType_s ValueType_s::decode(Buffer_t &buf, boost::container::vector<char> &d
     return *this;
 }
 
-Mapping_s Mapping_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+Mapping_s Mapping_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
     // set defaults
     id = 0;
     memory_start = 0;
@@ -40,8 +40,8 @@ Mapping_s Mapping_s::decode(Buffer_t &buf, boost::container::vector<char> &data)
     filename_index = 0;
     build_id_index = 0;
 
-    while (!data.empty()) {
-        Decoder::decode_field(buf, data);
+    while (fp.len != 0) {
+        Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1:
                 id = buf.u64;
@@ -98,13 +98,13 @@ Mapping_s Mapping_s::decode(Buffer_t &buf, boost::container::vector<char> &data)
 }
 
 
-Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
-    while (!data.empty()) {
-        auto res = Decoder::decode_field(buf, data);
+Sample_s Sample_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
+    while (fp.len != 0) {
+        auto res = Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1: {
                 if (buf.type == WireBytes) {
-                    while (!res.empty()) {
+                    while (res.len != 0) {
                         auto var_int = Decoder::decode_varint(res);
                         location_index.push_back(var_int);
                     }
@@ -117,7 +117,7 @@ Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
             }
             case 2: {
                 if (buf.type == WireBytes) {
-                    while (!res.empty()) {
+                    while (res.len != 0) {
                         auto var_int = Decoder::decode_varint(res);
                         value.push_back(var_int);
                     }
@@ -129,7 +129,7 @@ Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
             }
             case 3: {
                 Label_t l;
-                auto lbl = l.decode(buf, data);
+                auto lbl = l.decode(buf, fp);
                 label_index.push_back(lbl);
                 break;
             }
@@ -139,14 +139,14 @@ Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
     return *this;
 }
 
-Label_s Label_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+Label_s Label_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
     key_index = 0;
     str_index = 0;
     num_index = 0;
     num_unit_index = 0;
 
-    while (!data.empty()) {
-        Decoder::decode_field(buf, data);
+    while (fp.len != 0) {
+        Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1:
                 key_index = buf.u64;
@@ -168,7 +168,7 @@ Label_s Label_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
     return *this;
 }
 
-Location_s Location_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+Location_s Location_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
     id = 0;
     mapping_index = 0;
     address = false;
@@ -176,8 +176,8 @@ Location_s Location_s::decode(Buffer_t &buf, boost::container::vector<char> &dat
     is_folder = false;
     mapping = {};
 
-    while (!data.empty()) {
-        auto decode_res = Decoder::decode_field(buf, data);
+    while (fp.len != 0) {
+        auto decode_res = Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1: {
                 id = buf.u64;
@@ -213,11 +213,11 @@ Location_s Location_s::decode(Buffer_t &buf, boost::container::vector<char> &dat
     return *this;
 }
 
-Line_s Line_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+Line_s Line_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
     function_index = 0;
     line = 0;
-    while (!data.empty()) {
-        Decoder::decode_field(buf, data);
+    while (fp.len != 0) {
+        Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1: {
                 function_index = buf.u64;
@@ -235,7 +235,7 @@ Line_s Line_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
     return *this;
 }
 
-Function_s Function_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
+Function_s Function_s::decode(Buffer_t &buf, fat_pointer_t &fp) {
     id = 0;
     name = std::string{};
     system_name = std::string{};
@@ -246,8 +246,8 @@ Function_s Function_s::decode(Buffer_t &buf, boost::container::vector<char> &dat
     system_name_index = 0;
     filename_index = 0;
 
-    while (!data.empty()) {
-        Decoder::decode_field(buf, data);
+    while (fp.len != 0) {
+        Decoder::decode_field(buf, fp);
         switch (buf.field) {
             case 1: {
                 id = buf.u64;

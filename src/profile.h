@@ -6,6 +6,12 @@
 #include <boost/container/vector.hpp>
 #include <boost/unordered_map.hpp>
 
+typedef struct fat_pointer_s {
+    char *data;
+    uint64_t len;
+    uint64_t cursor;
+} fat_pointer_t;
+
 enum WireTypes {
     WireVarint = 0,
     WireFixed64 = 1,
@@ -37,7 +43,7 @@ typedef struct ValueType_s {
     // index in the string table
     int64_t unit_index;
 
-    ValueType_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    ValueType_s decode(Buffer_t &buf, fat_pointer_t &fp);
 } ValueType_t;
 
 
@@ -71,7 +77,7 @@ typedef struct Mapping_s {
     // Index into string table
     int64_t build_id_index;
 
-    Mapping_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    Mapping_s decode(Buffer_t &buf, fat_pointer_t &fp);
 } Mapping_t;
 
 typedef struct Label_s {
@@ -92,7 +98,7 @@ typedef struct Label_s {
     // and apply appropriate unit conversions to these.
     int64_t num_unit_index;
 
-    Label_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    Label_s decode(Buffer_t &buf, fat_pointer_t &fp);
 } Label_t;
 
 typedef struct Function_s {
@@ -116,7 +122,7 @@ typedef struct Function_s {
     // Index into string table
     int64_t filename_index;
 
-    Function_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    Function_s decode(Buffer_t &buf, fat_pointer_t &fp);
 } Function_t;
 
 typedef struct Line_s {
@@ -128,7 +134,7 @@ typedef struct Line_s {
     // HELPERS
     Function_t function;
 
-    Line_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    Line_s decode(Buffer_t &buf, fat_pointer_t &fp);
 } Line_t;
 
 // Describes function and line table debug information.
@@ -164,7 +170,7 @@ typedef struct Location_s {
     //HELPER
     Mapping_t mapping;
 
-    Location_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    Location_s decode(Buffer_t &buf, fat_pointer_t &fp);
 } Location_t;
 
 // Each Sample records values encountered in some program
@@ -198,7 +204,7 @@ typedef struct Sample_s {
     boost::container::vector<uint64_t> location_index;
     boost::container::vector<Label_t> label_index;
 
-    Sample_s decode(Buffer_t &buf, boost::container::vector<char> &data);
+    Sample_s decode(Buffer_t &buf, fat_pointer_t &fp);
 
 } Sample_t;
 

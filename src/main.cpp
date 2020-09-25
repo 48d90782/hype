@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
     // buffer is the initial file content
     // it could be compressed
-    boost::container::vector<char> buffer;
+
     try {
         spdlog::info("start reading the file");
         file->open(path, std::ios::binary);
@@ -47,7 +47,8 @@ int main(int argc, char *argv[]) {
             file->seekg(0, std::ios::beg);
 
             if (length > 0) {
-                buffer.resize(length);
+                boost::container::vector<char> buffer(length);
+//                buffer.resize(length);
                 file->read(&buffer[0], length);
 
                 // check is there data gzipped
@@ -63,12 +64,24 @@ int main(int argc, char *argv[]) {
                     BOOST_ASSERT(!buffer.empty());
                 }
 
+                //char *arr = &buffer[0];
+
+                fat_pointer_t fp{
+                        .data = buffer.data(),
+                        .len = buffer.size(),
+                        .cursor = 0,
+                };
+
+                //assert(arr != nullptr);
+
                 Buffer_t buf{0, WireBytes, 0};
                 Profile_t profile{};
 
-                Decoder::decode_message(buf, profile, buffer);
+                spdlog::info("start decoding");
+                Decoder::decode_message(buf, profile, fp);
+                spdlog::info("decode_message done");
                 Decoder::post_decode(profile);
-                std::cout << "done" << std::endl;
+                spdlog::info("post_decode done");
             }
         }
     } catch (const std::exception &e) { // catch all exceptions here
