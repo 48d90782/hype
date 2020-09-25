@@ -10,6 +10,10 @@ ELSE ()
     set(DEFAULT_LINKER_OPTIONS -pthread)
 ENDIF ()
 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 find_package(Threads REQUIRED)
 
 find_package(Boost 1.73 REQUIRED COMPONENTS program_options iostreams)

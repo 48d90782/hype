@@ -113,6 +113,7 @@ Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
 
                 assert(buf.type == WireVarint);
                 location_index.push_back(buf.u64);
+                break;
             }
             case 2: {
                 if (buf.type == WireBytes) {
@@ -124,11 +125,13 @@ Sample_s Sample_s::decode(Buffer_t &buf, boost::container::vector<char> &data) {
                 }
                 assert(buf.type == WireVarint);
                 value.push_back(buf.u64);
+                break;
             }
             case 3: {
                 Label_t l;
                 auto lbl = l.decode(buf, data);
                 label_index.push_back(lbl);
+                break;
             }
         }
 
@@ -264,6 +267,7 @@ Function_s Function_s::decode(Buffer_t &buf, boost::container::vector<char> &dat
             }
             case 5: {
                 start_line = buf.u64;
+                break;
             }
             default:
                 throw std::runtime_error("unknown function case");
