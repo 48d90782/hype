@@ -27,7 +27,7 @@ include_directories(${Boost_INCLUDE_DIR})
 file(
         GLOB
         _src
-        src/main.cpp
+        src/hype.cpp
         src/decode.h
         src/decoder.cpp
         src/profile.h
