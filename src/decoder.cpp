@@ -99,7 +99,7 @@ fat_pointer_t Decoder::decode_field(Buffer_t &buf, fat_pointer_t &fp) {
     switch (buf.type) {
         case WireBytes: {
             auto var_int = Decoder::decode_varint(fp);
-
+            
             buf_data.data = new char[var_int];
             buf_data.len = var_int;
             buf_data.cursor = 0;
