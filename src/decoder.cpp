@@ -226,6 +226,7 @@ void Decoder::decode_profile_field(Profile_t &prof, Buffer_t &buf, fat_pointer_t
 void Decoder::post_decode(Profile_t &prof) {
     spdlog::info("starting post decode step");
     boost::unordered_map<uint64_t, Mapping_t> mappings;
+    mappings.reserve(prof.mapping.size());
     Mapping_t mappingsIds[prof.mapping.size() + 1];
 
     for (auto &m: prof.mapping) {
@@ -239,6 +240,7 @@ void Decoder::post_decode(Profile_t &prof) {
     }
 
     boost::unordered_map<uint64_t, Function_t> functions;
+    functions.reserve(prof.function.size());
     Function_t functionIds[prof.function.size() + 1];
 
     for (auto &f:prof.function) {
@@ -254,6 +256,7 @@ void Decoder::post_decode(Profile_t &prof) {
     }
 
     boost::unordered_map<uint64_t, Location_t> locations;
+    locations.reserve(locations.size());
     Location_t locationIds[prof.location.size() + 1];
 
     for (auto &l:prof.location) {
@@ -294,8 +297,11 @@ void Decoder::post_decode(Profile_t &prof) {
 
     for (auto &s: prof.sample) {
         boost::unordered_map<std::string, boost::container::vector<std::string>> labels;
+        labels.reserve(s.label_index.size());
         boost::unordered_map<std::string, boost::container::vector<int64_t>> num_labels;
+        num_labels.reserve(s.label_index.size());
         boost::unordered_map<std::string, boost::container::vector<std::string>> num_units;
+        num_units.reserve(s.label_index.size());
 
         for (auto &l:s.label_index) {
             std::string key, value;
