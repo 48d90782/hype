@@ -49,6 +49,7 @@ list(
         ZLIB::ZLIB
         spdlog::spdlog
         spdlog::spdlog_header_only
+        docopt_s
 )
 
 add_library(hype STATIC ${_src})
