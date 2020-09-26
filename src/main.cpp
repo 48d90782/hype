@@ -48,7 +48,6 @@ int main(int argc, char *argv[]) {
 
             if (length > 0) {
                 boost::container::vector<char> buffer(length);
-//                buffer.resize(length);
                 file->read(&buffer[0], length);
 
                 // check is there data gzipped
@@ -72,7 +71,7 @@ int main(int argc, char *argv[]) {
                         .cursor = 0,
                 };
 
-                //assert(arr != nullptr);
+                assert(fp.data != nullptr);
 
                 Buffer_t buf{0, WireBytes, 0};
                 Profile_t profile{};

@@ -27,7 +27,7 @@ uint64_t Decoder::decode_varint(fat_pointer_t &fp) {
         // 0011101100000000
         // 0011101101010110 = 15190 10.4.8
 
-        u |= (uint64_t)((uint64_t) fp.data[fp.cursor + i] & 0x7Fu) << (uint64_t) (7 * i);
+        u |= (uint64_t) ((uint64_t) fp.data[fp.cursor + i] & 0x7Fu) << (uint64_t) (7 * i);
 
         // shl -> safe shift left operation
         // here we check all 8 bits for MSB
@@ -57,7 +57,10 @@ uint64_t Decoder::decode_fixed64(const fat_pointer_t &fp) {
             ((uint64_t) fp.data[7]) << 56u);
 }
 
-std::string Decoder::decode_string(const fat_pointer_t &fp) {
+std::string Decoder::decode_string(fat_pointer_t &fp) {
+    if (fp.cursor == 0 && fp.len == 0) {
+        return std::string{""};
+    }
     return std::string{fp.data};
 }
 
@@ -81,7 +84,6 @@ void Decoder::decode_message(Buffer_t &buf, Profile_t &prof, fat_pointer_t &fp) 
         auto res = decode_field(buf, fp);
         // TODO return type, not void
         Decoder::decode_profile_field(prof, buf, res);
-        delete res.data;
     }
 }
 
@@ -98,17 +100,14 @@ fat_pointer_t Decoder::decode_field(Buffer_t &buf, fat_pointer_t &fp) {
         case WireBytes: {
             auto var_int = Decoder::decode_varint(fp);
 
-            buf_data.data = new char(var_int);
+            buf_data.data = new char[var_int];
             buf_data.len = var_int;
             buf_data.cursor = 0;
 
-            for (uint64_t i = 0; i < var_int; ++i) {
-                std::cout << +(uint8_t )fp.data[fp.cursor +i] << " ";
-                buf_data.data[i] = (uint8_t )fp.data[fp.cursor + i];
-                fp.len -= 1;
-            }
-            std::cout << std::endl;
+            std::copy(fp.data + fp.cursor, fp.data + fp.cursor + var_int, buf_data.data);
+            fp.len -= var_int;
             fp.cursor += var_int;
+
             return buf_data;
         }
 

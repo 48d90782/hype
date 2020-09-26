@@ -23,7 +23,7 @@ public:
 
     static uint32_t decode_fixed32(const fat_pointer_t &fp);
 
-    static std::string decode_string(const fat_pointer_t &fp);
+    static std::string decode_string(fat_pointer_t &fp);
 
     static fat_pointer_t decode_field(Buffer_t &buf, fat_pointer_t &fp);
 
