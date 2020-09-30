@@ -9,32 +9,12 @@
 #include <boost/assert.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #include "spdlog/spdlog.h"
-#include "docopt/docopt.h"
 
 namespace opt = boost::program_options;
-
-static const char USAGE[] =
-        R"(Hype.
-
-    Usage:
-      hype --path <path/to/profile.pb.gz>
-
-    Options:
-      -h --help     Show this screen.
-      --path        path to the profile.
-)";
 
 
 int main(int argc, char *argv[]) {
     opt::options_description description("All options");
-
-    std::map<std::string, docopt::value> args
-            = docopt::docopt(USAGE,
-                             {argv + 1, argv + argc},
-                             true,            // show help if requested
-                             "Hype 0.1");  // version string
-
-
     description.add_options()(
             "path", opt::value<std::string>(), "path to the pprof file"
     );

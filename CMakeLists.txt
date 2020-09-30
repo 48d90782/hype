@@ -21,7 +21,6 @@ find_package(Boost 1.73 REQUIRED COMPONENTS program_options iostreams)
 find_package(ZLIB REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(docopt CONFIG REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
@@ -50,7 +49,6 @@ list(
         ZLIB::ZLIB
         spdlog::spdlog
         spdlog::spdlog_header_only
-        docopt_s
 )
 
 add_library(hype STATIC ${_src})
